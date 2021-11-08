@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\IoTApi.Data\IoTApi.Data.csproj" />
+    <ProjectReference Include="..\IoTApi.Entities\IoTApi.Entities.csproj" />
+  </ItemGroup>
+
+</Project>
