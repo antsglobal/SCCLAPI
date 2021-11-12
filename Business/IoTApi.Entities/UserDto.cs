@@ -30,7 +30,7 @@ namespace IoTApi.Entities
         public string userEmail { get; set; }
         public string userPassword { get; set; }
         public int isActive { get; set; }
-
+        public int Login { get; set; }
     }
 
 }
