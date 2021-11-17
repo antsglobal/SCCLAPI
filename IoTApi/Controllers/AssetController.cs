@@ -37,8 +37,8 @@ namespace IoTApi.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Login(string userEmail, string userPassword)
+        [HttpPost]
+        public async Task<IActionResult> Login([FromForm] string userEmail, [FromForm] string userPassword)
         {
             object obj = new object();
             try
