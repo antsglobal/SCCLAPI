@@ -9,5 +9,7 @@ namespace IoTApi.Business.IDeviceBo
     public interface IAssetBO
     {
         Task<EntitiesResult> Login(string strEmail, string strPassword);
+        Task<AssetViewResultEntiriesDto> AssetView();
+        Task<AssetRegisterResultEntiriesDto> AssetRegister(AssetEntitieseDto objAssetDto);
     }
 }

@@ -30,7 +30,23 @@ namespace IoTApi.Business.DeviceBo
             return entitiesResult;
         }
 
-        
+        public async Task<AssetViewResultEntiriesDto> AssetView()
+        {
+            AssetViewResultEntiriesDto objAssetsResult;
+            objAssetsResult = await this.getAssetDetails();
+
+            return objAssetsResult;
+        }
+
+        public async Task<AssetRegisterResultEntiriesDto> AssetRegister(AssetEntitieseDto objAssetsDto)
+        {
+            AssetRegisterResultEntiriesDto objAssetsResult;
+            objAssetsResult = await this.insertAssetDetails(objAssetsDto);
+
+            return objAssetsResult;
+        }
+
+
         public async Task<EntitiesResult> getUserDetails(string strEmail, string strPassword)
         {
             //string hashedPass = MD5Hash(strPassword);
@@ -82,6 +98,75 @@ namespace IoTApi.Business.DeviceBo
             return hash.ToString();
         }
 
+        public async Task<AssetViewResultEntiriesDto> getAssetDetails()
+        {
+            string strAssetView = "select * from AssetDetails";
+            IEnumerable<AssetEntitieseDto> objAssetDto;
+            //AssetViewResultEntiriesDto objAssetResultDto;
+
+            try
+            {
+                using (var conn = base.ObjConnection)
+                {
+
+                    objAssetDto =  (await conn.QueryAsync<AssetEntitieseDto>(strAssetView, commandTimeout: 120, commandType: CommandType.Text));
+
+                }
+                if (objAssetDto == null)
+                {
+                    return new AssetViewResultEntiriesDto() { status = "false", message = "No Data in Assets", data = null };
+                }
+            }
+            catch (Exception ex)
+            {
+                //return BadRequest(ex.Message);
+                return new AssetViewResultEntiriesDto() { status = "false", message = "Error in AssetsView", data = null };
+            }
+            return new AssetViewResultEntiriesDto() { status = "true", message = "asset details added successfully", data = objAssetDto };
+            
+        }
+        string strAssetView = "insert into AssetDetails(AssetCode, AssetDescription, Location, Status, Action) values(@assetCode, @assetDescription, @Location, @status, @action)";
+        public async Task<AssetRegisterResultEntiriesDto> insertAssetDetails(AssetEntitieseDto objAssetsDto)
+        {
+            AssetEntitieseDto objAssetDto;
+            AssetRegisterResultEntiriesDto objAssetResultDto;
+            objAssetDto = objAssetsDto;
+           
+            int result = 0;
+            
+            try
+            {
+                using (var conn = base.ObjConnection)
+                {
+
+                    //assetEntitieseDtos = (await conn.QueryAsync<AssetEntitieseDto>(strAssetView, commandTimeout: 120, commandType: CommandType.Text));
+
+                    result = Convert.ToInt32(conn.ExecuteScalar(strAssetView,
+                                                            commandTimeout: 120,
+                                                             param: new
+                                                             {
+                                                                 @assetCode = objAssetsDto.AssetCode,
+                                                                 @assetDescription = objAssetsDto.AssetDescription,
+                                                                 @Location = objAssetsDto.Location,
+                                                                 @status = objAssetsDto.status,
+                                                                 @action = 1
+                                                             }));
+
+                }
+                if (result == 0)
+                {
+                    return new AssetRegisterResultEntiriesDto() { status = "false", message = "No Data in Assets", data = 0 };
+                }
+            }
+            catch (Exception ex)
+            {
+                //return BadRequest(ex.Message);
+                string strException = ex.ToString();
+                return new AssetRegisterResultEntiriesDto() { status = "false", message = "Error in registering asset", data = 0 };
+            }
+            return new AssetRegisterResultEntiriesDto() { status = "true", message = "asset details added successfully", data = result };
+
+        }
 
     }
 }

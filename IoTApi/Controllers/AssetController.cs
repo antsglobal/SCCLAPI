@@ -51,6 +51,36 @@ namespace IoTApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        
+
+        [HttpGet]
+        public async Task<IActionResult> assetview()
+        {
+            object obj = new object();
+            try
+            {
+
+                return Ok(await this._objAssetBO.AssetView());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AssetRegister([FromForm] AssetEntitieseDto objAssetsView)
+        {
+            object obj = new object();
+            try
+            {
+
+                return Ok(await this._objAssetBO.AssetRegister(objAssetsView));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
